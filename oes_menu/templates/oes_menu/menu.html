@@ -1,0 +1,83 @@
+{% load staticfiles %}
+{% load get_item %}
+
+<html>
+	<head>
+		<title>OES Menu</title>
+
+		<!-- For responsiveness -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Raleway:400,700,200' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
+
+		<link rel='stylesheet' type='text/css' href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css'/>
+		<link rel='stylesheet' type='text/css' href="{% static 'oes_menu/style.css' %}"/>
+		<script src="{% static 'oes_menu/script.js' %}"></script>
+	</head>
+	<body>
+		{% autoescape off %}
+
+		<div class='main container'>
+			<div class='col-md-offset-1 table-title'>OES Dining Hall Menu</div>
+			<div class='col-md-1 text-center titles-col'>
+				<div class='day-push'></div>
+				<div class='titles'>
+					<div class='title'>
+						Classic
+					</div>
+					<div class='title'>
+						Global
+					</div>
+					<div class='title'>
+						Dessert
+					</div>
+					<div class='title'>
+						Dinner
+					</div>
+				</div>
+			</div>
+
+
+			<div class='days'>
+
+			{% for day_name in days_list %}
+
+			<div class='{% if day == forloop.counter %}today col-md-3{% else %}col-md-2{% endif %}{% if forloop.counter > day %} after-today{% endif %} day-col text-center'>
+
+				<div class='day'>
+					{{ day_name }}
+				</div>
+				{% with position=forloop.counter|add:"-1" %}
+				{% with day_menu=menu|get_item:position %}
+				<div class='items'>
+					<div class='item'>
+						{{ day_menu.classic }}
+					</div>
+					<div class='divider'></div>
+					<div class='item'>
+						{{ day_menu.global }}
+					</div>
+					<div class='divider'></div>
+					<div class='item'>
+						{{ day_menu.dessert }}
+					</div>
+					<div class='divider'></div>
+					<div class='item'>
+						{{ day_menu.dinner }}
+					</div>
+				</div>
+				{% endwith %}
+				{% endwith %}
+			</div>
+
+			{% endfor %}
+			</div>
+
+		</div>
+		{% endautoescape %}
+
+
+	</body>
+</html>
