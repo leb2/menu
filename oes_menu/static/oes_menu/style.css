@@ -48,6 +48,12 @@ body {
 	font-weight: 200;
 	letter-spacing: 2px;
 }
+	.date {
+		font-size: 14px;
+		color: #444;
+		margin-left: 16px;
+		text-transform: uppercase;
+	}
 
 .titles {
 	background: none !important;
@@ -165,11 +171,3 @@ body {
 		display: block !important;
 	}
 }
-
-
-
-
-
-
-
-

@@ -14,23 +14,37 @@ class MenuSpiderSpider(CrawlSpider):
 
     def parse_menu(self, response):
         item = MenuItem()
-        # item['menu'] = response.css('table').extract()
-        # day = item['days'][i]
         item['days'] = []
 
+        meal_row_map = {
+            'classic': 3,
+            'global': 4,
+            'dinner': 5,
+        }
+
+        def strip_tags_from(markup):
+            return str(re.sub(r'<[^<]+?>', '', markup.encode('utf-8')))
+
         def css_query(day, meal):
-            return 'tbody tr:nth-child(' + str(meal) + ') td:nth-child(' + str(i+2) + ') strong:nth-child(1) span'
+            css_query = (
+                'tbody tr:nth-child(' + str(meal) + ') '
+                'td:nth-child(' + str(day+2) + ') '
+                'strong:nth-child(1) span'
+            )
+            return strip_tags_from(response.css(css_query).extract()[0])
 
-        for i in range(5): # For 5 Days of Week
+        for day in range(5): # For 5 Days of Week
             item['days'].append({})
-            item['days'][i]['classic'] = str(re.sub('<[^<]+?>', '', str(response.css(css_query(i, 5)).extract()[0])))
-            print item['days'][i]['classic']
-            item['days'][i]['global'] = str(re.sub('<[^<]+?>', '', str(response.css(css_query(i, 6)).extract()[0])))
-            item['days'][i]['dinner'] = str(re.sub('<[^<]+?>', '', str(response.css(css_query(i, 7)).extract()[0])))
+            for meal_name, meal_row in meal_row_map.iteritems():
+                try:
+                    item['days'][day][meal_name] = css_query(day, meal_row)
+                except IndexError:
+                    print "NO VALUE"
 
-            # Dessert only on odd days
-            item['days'][i]['dessert'] = ''
-            if i % 2 == 0:
-                item['days'][i]['dessert'] = str(re.sub('<[^<]+?>', '', str(response.css(css_query(i, 3)).extract()[0])))
+        def date_for_day(day):
+            css_query = 'thead td:nth-child(' + str(day+2) + ')'
+            full_heading = strip_tags_from(response.css(css_query).extract()[0])
+            return re.sub(r'^.*-\s', '', str(full_heading)).strip()
 
+        item['date'] = date_for_day(1) + ' - ' + date_for_day(5)
         return item

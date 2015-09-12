@@ -20,7 +20,10 @@
 		{% autoescape off %}
 
 		<div class='main container'>
-			<div class='col-md-offset-1 table-title'>OES Dining Hall Menu</div>
+			<div class='col-md-offset-1 table-title'>
+				<span>OES Dining Hall Menu</span>
+				<span class='date'>{{ menu.date }}</span>
+			</div>
 			<div class='col-md-1 text-center titles-col'>
 				<div class='day-push'></div>
 				<div class='titles'>
@@ -50,7 +53,7 @@
 					{{ day_name }}
 				</div>
 				{% with position=forloop.counter|add:"-1" %}
-				{% with day_menu=menu|get_item:position %}
+				{% with day_menu=menu.days|get_item:position %}
 				<div class='items'>
 					<div class='item'>
 						{{ day_menu.classic }}

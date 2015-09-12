@@ -11,3 +11,4 @@ import scrapy
 class MenuItem(scrapy.Item):
     menu = scrapy.Field()
     days = scrapy.Field()
+    date = scrapy.Field()
