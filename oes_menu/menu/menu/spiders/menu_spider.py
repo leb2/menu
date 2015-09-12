@@ -22,29 +22,40 @@ class MenuSpiderSpider(CrawlSpider):
             'dinner': 5,
         }
 
-        def strip_tags_from(markup):
-            return str(re.sub(r'<[^<]+?>', '', markup.encode('utf-8')))
-
-        def css_query(day, meal):
-            css_query = (
+        def cell_selector(day, meal):
+            return (
                 'tbody tr:nth-child(' + str(meal) + ') '
                 'td:nth-child(' + str(day+2) + ') '
-                'strong:nth-child(1) span'
             )
-            return strip_tags_from(response.css(css_query).extract()[0])
+
+        def css_extract(selector, default=''):
+            return response.css(selector).extract_first(default=default)
+
+        def menu_item(day, meal):
+            menu_item_sel = 'strong:first-child span::text'
+            return css_extract(cell_selector(day, meal) + menu_item_sel)
+
+        def description(day, meal):
+            desc_sel = '.menu-item-description:first-child .collapsed::text'
+            selector = cell_selector(day, meal) + desc_sel
+            description = css_extract(selector)
+            if len(description):
+                return "<div class='item-desc'>" + css_extract(selector) + "</div>"
+            else:
+                return  description
+
+        def date_for_day(day):
+            selector = 'thead td:nth-child(' + str(day+2) + ')::text'
+            full_heading = css_extract(selector)
+            # Remove weekday from date string
+            return re.sub(r'^.*-\s', '', str(full_heading)).strip()
 
         for day in range(5): # For 5 Days of Week
             item['days'].append({})
             for meal_name, meal_row in meal_row_map.iteritems():
-                try:
-                    item['days'][day][meal_name] = css_query(day, meal_row)
-                except IndexError:
-                    print "NO VALUE"
-
-        def date_for_day(day):
-            css_query = 'thead td:nth-child(' + str(day+2) + ')'
-            full_heading = strip_tags_from(response.css(css_query).extract()[0])
-            return re.sub(r'^.*-\s', '', str(full_heading)).strip()
+                meal = item['days'][day][meal_name] = {}
+                meal['title'] = menu_item(day, meal_row)
+                meal['desc'] = description(day, meal_row)
 
         item['date'] = date_for_day(1) + ' - ' + date_for_day(5)
         return item

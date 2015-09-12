@@ -11,6 +11,7 @@ html {
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
+	/*-webkit-font-smoothing: antialiased*/
 }
 body {
 	background: none;
@@ -125,13 +126,31 @@ body {
 	}
 		.item {
 			color: #333;
-			font-family: 'Open Sans', Helvetica, San-serif;
+			font-family: 'Open Sans', helvetica, sans-serif;
 			font-weight: 200;
 			text-transform: capitalize;
-			overflow: hidden;
+			position: relative;
 		}
 			.item:hover {
 				background: rgba(255, 255, 255, 0.1);
+			}
+			.item .item-desc {
+				/*display: none;*/
+				font-size: 11px;
+				font-weight: normal;
+				background: rgba(60,60,60,0.95);
+				padding: 12px;
+				color: #DDD;
+				position: absolute;
+				left: 10px;
+				right: 10px;
+				z-index: 999;
+				margin-top: 12px;
+				display: none;
+				text-transform: none;
+			}
+			.item:hover .item-desc {
+				display: block;
 			}
 
 	.item, .title {

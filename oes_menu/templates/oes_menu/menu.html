@@ -52,27 +52,33 @@
 				<div class='day'>
 					{{ day_name }}
 				</div>
+				{% autoescape off %}
 				{% with position=forloop.counter|add:"-1" %}
 				{% with day_menu=menu.days|get_item:position %}
 				<div class='items'>
 					<div class='item'>
-						{{ day_menu.classic }}
+						<div class='item-title'>{{ day_menu.classic.title }}</div>
+						{{ day_menu.classic.desc}}
 					</div>
 					<div class='divider'></div>
 					<div class='item'>
-						{{ day_menu.global }}
+						{{ day_menu.global.title }}
+						{{ day_menu.global.desc}}
 					</div>
 					<div class='divider'></div>
 					<div class='item'>
-						{{ day_menu.dessert }}
+						{{ day_menu.dessert.title }}
+						{{ day_menu.dessert.desc}}
 					</div>
 					<div class='divider'></div>
 					<div class='item'>
-						{{ day_menu.dinner }}
+						{{ day_menu.dinner.title }}
+						{{ day_menu.dinner.desc}}
 					</div>
 				</div>
 				{% endwith %}
 				{% endwith %}
+				{% endautoescape %}
 			</div>
 
 			{% endfor %}
