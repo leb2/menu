@@ -17,9 +17,10 @@ class MenuSpiderSpider(CrawlSpider):
         item['days'] = []
 
         meal_row_map = {
-            'classic': 3,
-            'global': 4,
-            'dinner': 5,
+            'classic': 4,
+            'global': 5,
+            'dinner': 6,
+            'dessert': 3,
         }
 
         def cell_selector(day, meal):
@@ -56,6 +57,7 @@ class MenuSpiderSpider(CrawlSpider):
                 meal = item['days'][day][meal_name] = {}
                 meal['title'] = menu_item(day, meal_row)
                 meal['desc'] = description(day, meal_row)
+
 
         item['date'] = date_for_day(1) + ' - ' + date_for_day(5)
         return item
